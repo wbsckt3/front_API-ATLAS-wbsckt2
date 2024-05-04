@@ -1,36 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Google One Tap Example</title>
+    <title>Google Auth Example</title>
   </head>
   <body>
-    <h1>Google One Tap Example</h1>
-    <!-- The data-callback HTML attribute sets the callback function that is run
-      when the user logs in. Here we're calling the handleCredentialsResponse JavaScript
-      function defined in the below script section to log the user into App Services.
-    -->
-    <div
-      id="g_id_onload"
-      data-client_id="980822676255-vntch0t28qbesul2bp5oc1galtoi8a97.apps.googleusercontent.com"
-      data-callback="handleCredentialsResponse"
-    ></div>
+    <h1>Google Auth Example</h1>
+    <button id="google-auth">Authenticate!</button>
   </body>
-  <!--  https://www.mongodb.com/docs/atlas/device-sdks/web/authenticate/#google-authentication -->
-  <!-- Load Atlas App Services -->
+  <!-- Load Realm -->
   <script src="https://unpkg.com/realm-web/dist/bundle.iife.js"></script>
-  <!-- Load Google One Tap -->
-  <script src="https://accounts.google.com/gsi/client"></script>
-  <!-- Log in with Realm and Google Authentication -->
-  <script async defer>
+  <!-- Log in with App Services and Google Authentication -->
+  <script>
     const app = new Realm.App({
       id: "data-wugsegk",
     });
-    // Callback used in `data-callback` to handle Google's response and log user into App Services
-    function handleCredentialsResponse(response) {
-      const credentials = Realm.Credentials.google({ id_token: response.credential });
+
+    const authButton = document.getElementById("google-auth");
+    authButton.addEventListener("click", () => {
+      // The redirect URL should be on the same domain as this app and
+      // specified in the auth provider configuration.
+      const redirectUrl = "https://wbsckt3.github.io/refactorii.api-gmail.com-repl.it-google-signin-users/auth.html";
+      const credentials = Realm.Credentials.google({ redirectUrl });
+      // Calling logIn() opens a Google authentication screen in a new window.
       app
         .logIn(credentials)
-        .then((user) => alert(`Logged in with id: ${user.id}`));
-    }
+        .then((user) => {
+          // The logIn() promise will not resolve until you call `handleAuthRedirect()`
+          // from the new window after the user has successfully authenticated.
+          console.log(`Logged in with id: ${user.id}`);
+        })
+        .catch((err) => console.error(err));
+    });
   </script>
 </html>
