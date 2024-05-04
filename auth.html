@@ -6,7 +6,12 @@
   <body>
     <p>Redirects come here for Google Authentication</p>
   </body>
+  <script src="https://unpkg.com/realm-web/dist/bundle.iife.js"></script>
+  <!-- Log in with App Services and Google Authentication -->
   <script>
+    const app = new Realm.App({
+      id: "data-wugsegk",
+    });
     Realm.handleAuthRedirect();
   </script>
 </html>
